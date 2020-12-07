@@ -1,4 +1,4 @@
-//Andrea Aguirre, Andres Eger, Camilo Ferrera y Diego Ramos
+//Andrea Aguirre, Andres Eger, Camilo Ferrera y Diego Ramos EDD2
 #ifndef ARBOLB_H
 #define ARBOLB_H
 
