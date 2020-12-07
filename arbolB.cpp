@@ -9,15 +9,21 @@ Nodo* ArbolB::split(Nodo* padre, Nodo* hijo, int key, int indice){
       if(key < hijo->llaves[i])
          std::swap(key, hijo->llaves[i]);
    Nodo* buffer_node = new Nodo { .hijos = new Nodo*[max_hijos], .llaves = new int[max_llaves] };
-   buffer_node->llaves[0] = hijo->llaves[max_hijos/2 + 1];
+
    for(int j = max_hijos/2 + 1, k = 0; j < max_hijos; j++)
       buffer_node->llaves[k++] = hijo->llaves[j];
    buffer_node->llaves[max_hijos/2 - 1] = key;
+   buffer_node->num_de_llaves = min_llaves;
+
    //organizar los hijos respectivamente
    for(int j = 0; j < max_hijos/2 - 1; j++)
-      buffer_node->hijos[j] = hijo->hijos[j + max_hijos/2];
+      buffer_node->hijos[j] = hijo->hijos[j + max_hijos - max_hijos/2 + 1];
    for(int k = max_hijos - 1; k >= 0; k--)
       hijo->hijos[k] = hijo->hijos[k - 1];
+   hijo->num_de_llaves = max_llaves - min_llaves - 1;
+   key = hijo->llaves[max_hijos/2];
+   std::swap(padre->llaves[indice], key);
+   std::swap(padre->hijos[indice], buffer_node);
 }
 
 void ArbolB::insertNonFull(int key, Nodo* x){
