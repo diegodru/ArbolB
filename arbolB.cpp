@@ -29,20 +29,21 @@ void ArbolB::split(Nodo* padre, Nodo* hijo, int key, int indice){
    key = hijo->llaves[max_hijos/2];
 
    if(padre != nullptr){
-      if(padre->llaves[indice] > key){
-         std::swap(padre->llaves[indice], key);
-         std::swap(padre->hijos[indice + 1], buffer_node);
+      std::cout << "indice " << indice << " ";
+      if(padre->llaves[indice - 1] > key){
+         std::swap(padre->llaves[indice - 1], key);
+         std::swap(padre->hijos[indice], buffer_node);
+      }
+      //sort llaves e hijos del padre con el buffer_node
+      for(int i = indice + 1; i < padre->num_de_llaves; i++){
+         std::swap(key, padre->llaves[i]);
+         std::swap(buffer_node, padre->hijos[i]);
       }
       padre->llaves[padre->num_de_llaves] = key;
       padre->hijos[padre->num_de_llaves++ + 1] = buffer_node;
 
       buffer_node->padre = padre;
       hijo->padre = padre;
-      //sort llaves e hijos del padre con el buffer_node
-      for(int i = indice + 1; i < padre->num_de_llaves; i++){
-         std::swap(key, padre->llaves[i]);
-         std::swap(buffer_node, padre->hijos[i]);
-      }
    }else{
       raiz = new Nodo{ .hijos = new Nodo*[max_hijos], .llaves = new int[max_llaves]};
       raiz->llaves[0] = key;
@@ -60,7 +61,8 @@ void ArbolB::insertNonFull(int key, Nodo* x){
    int indice = x->num_de_llaves - 1;
    if(x->es_nodo_hoja){
       while(indice >= 0 && key < x->llaves[indice]){
-         x->llaves[indice + 1] = x->llaves[indice]; //
+         if(x->num_de_llaves != max_llaves)
+            x->llaves[indice + 1] = x->llaves[indice];
          indice--;
       }
       if(x->num_de_llaves == max_llaves)
@@ -70,7 +72,7 @@ void ArbolB::insertNonFull(int key, Nodo* x){
          x->num_de_llaves++;
       }
    }else{
-      while(indice >= 0 && key < x->llaves[indice])
+      while(indice >=0 && key < x->llaves[indice])
          indice--;
       indice++;
       insertNonFull(key, x->hijos[indice]);
@@ -94,5 +96,7 @@ void ArbolB::printTree_rec(Nodo* x, int current_height){
 }
 
 void ArbolB::printTree(){
+   std::cout << '\n';
    printTree_rec(raiz, 0);
+   std::cout << '\n';
 }
